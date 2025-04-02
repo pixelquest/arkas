@@ -17,44 +17,44 @@ module.exports = function (app) {
   });
 
 
-  app.post("/api/user/addUser",
+  app.post("/user/addUser",
     [cpUpload, authJwt.verifyToken, authJwt.isAdminOrSupervisor, authJwt.authenticateToken, verifySignUp.checkDuplicateEmail, verifySignUp.checkRolesExisted],
     controller.addUser
   );
 
-  app.put("/api/user/updateUser/:id",
+  app.put("/user/updateUser/:id",
     [cpUpload, authJwt.verifyToken, authJwt.isAdminOrSupervisor, authJwt.authenticateToken, verifySignUp.checkDuplicateEmailWileUpdate, verifySignUp.checkRolesExistedById],
     controller.updateUser
   );
 
-  app.get("/api/user/allUsers", authJwt.authenticateToken, controller.allUsers);
+  app.get("/user/allUsers", authJwt.authenticateToken, controller.allUsers);
 
 
-  app.get("/api/user/searchUser",
+  app.get("/user/searchUser",
     [cpUpload, authJwt.verifyToken, authJwt.isAdminOrSupervisor, authJwt.authenticateToken],
     controller.searchUser
   );
 
 
-  app.get("/api/user/searchSupervisor",
+  app.get("/user/searchSupervisor",
     [cpUpload, authJwt.verifyToken, authJwt.isAdminOrSupervisor, authJwt.authenticateToken],
     controller.searchSupervisor
   );
 
-  app.delete("/api/user/deleteUser/:id", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.deleteUser);
+  app.delete("/user/deleteUser/:id", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.deleteUser);
 
-  // app.get("/api/test/all", controller.allAccess);
+  // app.get("/test/all", controller.allAccess);
 
-  app.get("/api/test/user", [authJwt.verifyToken], controller.userBoard);
+  app.get("/test/user", [authJwt.verifyToken], controller.userBoard);
 
   app.get(
-    "/api/test/mod",
+    "/test/mod",
     [authJwt.verifyToken, authJwt.isSupervisor],
     controller.supervisorBoard
   );
 
   app.get(
-    "/api/test/admin",
+    "/test/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );

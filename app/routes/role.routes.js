@@ -14,7 +14,7 @@ module.exports = function (app) {
         next();
     });
 
-    app.get("/api/role/allRoles", authJwt.authenticateToken, controller.allRoles);
+    app.get("/role/allRoles", authJwt.authenticateToken, controller.allRoles);
 
-    // app.get("/api/role/allRoles", [authJwt.verifyToken, authJwt.isAdmin], controller.allRoles);
+    // app.get("/role/allRoles", [authJwt.verifyToken, authJwt.isAdmin], controller.allRoles);
 };

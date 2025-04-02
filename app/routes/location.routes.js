@@ -11,14 +11,14 @@ module.exports = function (app) {
         next();
     });
 
-    app.get("/api/location/allLocations", [authJwt.verifyToken, authJwt.isAdminOrSupervisor, authJwt.authenticateToken], controller.allLocations);
+    app.get("/location/allLocations", [authJwt.verifyToken, authJwt.isAdminOrSupervisor, authJwt.authenticateToken], controller.allLocations);
 
-    app.post("/api/location/addLocation", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.addLocation);
+    app.post("/location/addLocation", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.addLocation);
 
-    app.put("/api/location/updateLocation/:id", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.updateLocation);
+    app.put("/location/updateLocation/:id", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.updateLocation);
 
-    app.delete("/api/location/deleteLocation/:id", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.deleteLocation);
+    app.delete("/location/deleteLocation/:id", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.deleteLocation);
 
 
-    //app.get("/api/role/allRoles", [authJwt.verifyToken, authJwt.isAdmin], controller.allRoles);
+    //app.get("/role/allRoles", [authJwt.verifyToken, authJwt.isAdmin], controller.allRoles);
 };

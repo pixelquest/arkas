@@ -23,7 +23,7 @@ module.exports = function (app) {
   const cpUpload = upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'panCard', maxCount: 1 }]);
 
   app.post(
-    "/api/auth/signup",
+    "/auth/signup",
     [
       cpUpload,
       authJwt.authenticateToken,
@@ -34,17 +34,17 @@ module.exports = function (app) {
   );
 
   app.post(
-    "/api/auth/signin",
+    "/auth/signin",
     authJwt.authenticateToken,
     controller.signin
   );
 
   app.post(
-    "/api/auth/sendEmail",
+    "/auth/sendEmail",
     authJwt.authenticateToken,
     controller.sendEmail
   );
 
-  app.post("/api/auth/signout",
+  app.post("/auth/signout",
     authJwt.authenticateToken, controller.signout);
 };
