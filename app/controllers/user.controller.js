@@ -167,7 +167,7 @@ exports.updateUser = async (req, res) => {
     phone: req.body.phone,
     roles: JSON.parse(req.body.roles),
     email: req.body.email.toLowerCase(),
-    password: bcrypt.hashSync(req.body.password, 8),
+    // password: bcrypt.hashSync(req.body.password, 8),
     // startTime: req.body.startTime,
     // endTime: req.body.endTime,
     // siteLocation: req.body.siteLocation,
@@ -199,81 +199,6 @@ exports.updateUser = async (req, res) => {
     console.error('Error:', error);
     res.status(500).json({ message: 'Server error.', error });
   }
-
-  /*  User.findByIdAndUpdate({}).sort({ rowNumber: -1 }).limit(1).then((data) => {
-     if (data) {
-       // console.log(data, 'data')
-       let n = (data[0]?.rowNumber) ? (data[0].rowNumber + 1) : 1984;
-       let empId = 'ARKAS' + n;
-       user.empId = empId;
-       user.rowNumber = n;
- 
-       // console.log(user, 'user');
- 
-       user.save((err, user) => {
-         // console.log(req.body.roles);
-         // console.log(typeof req.body.roles, 'type');
-         // console.log(typeof JSON.parse(req.body.roles), 'type');
-         // console.log(!Array.isArray(req.body.roles), 'type');
- 
-         let uRoles = JSON.parse(req.body.roles);
- 
-         // console.log(roles.length, 'roles length');
-         // console.log(uRoles, 'Assigned ROles');
- 
-         if (err) {
-           // console.log(err, 'error')
-           res.status(500).send({ message: err });
-           return;
-         }
- 
-         if (!Array.isArray(uRoles)) {
-           return res.status(400).send({ error: 'Roles should be an array' });
-         }
- 
-         if (uRoles) {
-           Role.find(
-             {
-               name: { $in: uRoles },
-             },
-             (err, roles) => {
-               if (err) {
-                 res.status(500).send({ message: err });
-                 return;
-               }
- 
-               user.roles = roles.map((role) => role._id);
-               user.save((err) => {
-                 if (err) {
-                   res.status(500).send({ message: err });
-                   return;
-                 }
- 
-                 res.send({ message: "User was registered successfully!" });
-               });
-             }
-           );
-         } else {
-           Role.findOne({ name: "user" }, (err, role) => {
-             if (err) {
-               res.status(500).send({ message: err });
-               return;
-             }
- 
-             user.roles = [role._id];
-             user.save((err) => {
-               if (err) {
-                 res.status(500).send({ message: err });
-                 return;
-               }
- 
-               res.send({ message: "User was registered successfully!" });
-             });
-           });
-         }
-       })
-     }
-   }) */
 }
 
 exports.allUsers = async (req, res) => {

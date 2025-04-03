@@ -15,14 +15,14 @@ const allowedOrigins = ['http://localhost:4200', 'http://arkasfacilities.com', '
 app.use(
   cors({
     credentials: true,
-    origin: ["*"]
-    // origin: (origin, callback) => {
-    //   if (!origin || allowedOrigins.includes(origin)) {
-    //     callback(null, true); // Allow the request
-    //   } else {
-    //     callback(new Error('Not allowed by CORS')); // Block the request
-    //   }
-    // },
+    // origin: ["*"]
+    origin: (origin, callback) => {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true); // Allow the origin
+      } else {
+        callback(new Error('Not allowed by CORS')); // Reject the origin
+      }
+    }
   })
 );
 
@@ -60,35 +60,6 @@ db.mongoose
     console.error("Connection error", err);
     process.exit();
   });
-
-/* 
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://praveengandhe:AZ06YcYBEjCpwUyO@cluster0.7skah.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("arkas_app").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
- */
-
 
 // simple route
 app.get("/", (req, res) => {
