@@ -1,11 +1,8 @@
 const db = require("../models");
-// const Token = require("../models/token");
-
 const sendEmail = require('../helpers/sendEmail.helper');
 
 
 const crypto = require("crypto");
-const Joi = require("joi");
 var bcrypt = require("bcryptjs");
 
 const User = db.user;
@@ -30,7 +27,7 @@ exports.sendResetLink = async (req, res) => {
         console.log('base url', process.env.BASE_URL)
 
         const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
-        // await sendEmail(user.email, "Password reset", link);
+        await sendEmail(user.email, "Password reset", link);
 
         res.send({ message: "Password reset link sent to your email account", status: true });
     } catch (err) {
@@ -72,4 +69,10 @@ exports.resetPassword = async (req, res) => {
             message: "Server Error", status: false
         });
     }
+};
+
+
+
+exports.password = (req, res) => {
+    res.status(200).send("Admin Content.");
 };

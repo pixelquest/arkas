@@ -15,6 +15,7 @@ const allowedOrigins = ['http://localhost:4200', 'http://arkasfacilities.com', '
 app.use(
   cors({
     credentials: true,
+    origin: ["*"]
     // origin: (origin, callback) => {
     //   if (!origin || allowedOrigins.includes(origin)) {
     //     callback(null, true); // Allow the request
