@@ -17,17 +17,16 @@ module.exports = function (app) {
     next();
   });
 
+  app.post(
+    "/password-reset/sendResetLink",
+    authJwt.authenticateToken,
+    controller.sendResetLink
+  );
 
   app.post(
     "/password-reset/resetPassword/:userId/:token",
     authJwt.authenticateToken,
     controller.resetPassword
-  );
-
-  app.post(
-    "/password-reset/sendResetLink",
-    authJwt.authenticateToken,
-    controller.sendResetLink
   );
 
 };
