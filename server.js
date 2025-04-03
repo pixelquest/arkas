@@ -6,12 +6,22 @@ const dbConfig = require("./app/config/db.config");
 
 const app = express();
 
+// Define allowed origins
+const allowedOrigins = ['http://localhost:4200', 'http://arkasfacilities.com', 'https://arkasfacilities.com'];
+
+
 // app.use(cors());
 // /* for Angular Client (withCredentials) */
 app.use(
   cors({
     credentials: true,
-    // origin: ["http://localhost:4200"],
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true); // Allow the request
+      } else {
+        callback(new Error('Not allowed by CORS')); // Block the request
+      }
+    },
   })
 );
 
@@ -89,6 +99,7 @@ require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/role.routes")(app);
 require("./app/routes/location.routes")(app);
+require("./app/routes/password-reset.routes")(app);
 
 // set port, listen for requests
 // const PORT = process.env.PORT || 8080;
