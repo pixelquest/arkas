@@ -13,6 +13,7 @@ var bcrypt = require("bcryptjs");
 exports.signup = async (req, res) => {
   const aadharCard = req.files['aadharCard'] ? req.files['aadharCard'][0] : null;
   const panCard = req.files['panCard'] ? req.files['panCard'][0] : null;
+  const employeePhoto = req.files['employeePhoto'] ? req.files['employeePhoto'][0] : null;
 
   const user = new User({
     firstName: req.body.firstName,
@@ -20,6 +21,9 @@ exports.signup = async (req, res) => {
     reference: req.body.reference,
     aadharCard: aadharCard.path,
     panCard: panCard.path,
+    employeePhoto: employeePhoto?.path,
+    panCardNumber: req.body.panCardNumber,
+    aadharCardNumber: req.body.aadharCardNumber,
     phone: req.body.phone,
     email: req.body.email.toLowerCase(),
     password: bcrypt.hashSync(req.body.password, 8),

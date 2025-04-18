@@ -1,14 +1,17 @@
 const db = require("../models");
 const User = db.user;
 const Role = db.role;
+const Bank = db.bank;
 
 var bcrypt = require("bcryptjs");
+const path = require('path');
 
 exports.addUser = (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
 
   const aadharCard = req.files['aadharCard'] ? req.files['aadharCard'][0] : null;
   const panCard = req.files['panCard'] ? req.files['panCard'][0] : null;
+  const employeePhoto = req.files['employeePhoto'] ? req.files['employeePhoto'][0] : null;
 
   const user = new User({
     firstName: req.body.firstName,
@@ -16,7 +19,10 @@ exports.addUser = (req, res) => {
     reference: req.body.reference,
     aadharCard: aadharCard?.path,
     panCard: panCard?.path,
+    employeePhoto: employeePhoto?.path,
     phone: req.body.phone,
+    panCardNumber: req.body.panCardNumber,
+    aadharCardNumber: req.body.aadharCardNumber,
     email: req.body.email.toLowerCase(),
     password: bcrypt.hashSync(req.body.password, 8),
     // startTime: req.body.startTime,
@@ -154,6 +160,7 @@ exports.updateUser = async (req, res) => {
 
   const aadharCard = req.files['aadharCard'] ? req.files['aadharCard'][0] : null;
   const panCard = req.files['panCard'] ? req.files['panCard'][0] : null;
+  const employeePhoto = req.files['employeePhoto'] ? req.files['employeePhoto'][0] : null;
 
   const userId = req.params.id;
   const email = req.body.email.toLowerCase();
@@ -164,7 +171,10 @@ exports.updateUser = async (req, res) => {
     reference: req.body.reference,
     aadharCard: aadharCard?.path,
     panCard: panCard?.path,
+    employeePhoto: employeePhoto?.path,
     phone: req.body.phone,
+    panCardNumber: req.body.panCardNumber,
+    aadharCardNumber: req.body.aadharCardNumber,
     roles: JSON.parse(req.body.roles),
     email: req.body.email.toLowerCase(),
     // password: bcrypt.hashSync(req.body.password, 8),
@@ -226,12 +236,30 @@ exports.allUsers = async (req, res) => {
         limit: limit,
       };
     }
-    result.data = await User.find()
-      .sort({ [sortby]: sortOrder })
-      .skip(startIndex)
-      .limit(limit)
-      .where({ deleteStatus: false })
-      .exec();
+
+    result.data = await User.aggregate([
+      { $match: { deleteStatus: false } }, // Filter documents
+      {
+        $lookup: {
+          from: 'banks',           // Name of the orders collection
+          localField: '_id',        // Field in the users collection
+          foreignField: 'userId',   // Field in the orders collection
+          as: 'userBankInfo',
+        },
+      },
+      { $sort: { _id: 1 } },     // Sort documents
+      { $skip: startIndex }, // Skip documents
+      { $limit: limit }             // Limit number of results
+    ]);
+
+    // console.log(result, 'result');
+
+    // result.data = await User.find()
+    //   .sort({ [sortby]: sortOrder })
+    //   .skip(startIndex)
+    //   .limit(limit)
+    //   .where({ deleteStatus: false })
+    //   .exec();
     result.rowsPerPage = limit;
     return res.json({ message: "Users Fetched successfully", data: result });
   } catch (error) {
@@ -273,15 +301,27 @@ exports.deleteUser = (req, res) => {
   }
 };
 
+exports.getImage = async (req, res) => {
+  try {
+    // const imagePath = path.join(__dirname, req.params.filename); // Path to your image
+    // res.sendFile(imagePath, (err) => {
+    //   if (err) {
+    //     console.error('Error sending file:', err);
+    //     res.status(500).send('Error sending file');
+    //   }
+    // });
 
-exports.userBoard = (req, res) => {
-  res.status(200).send("User Content.");
-};
+    // console.log(req.params.filename, 'filename');
+    const imagePath = path.join(__dirname, '../../uploads', req.params.filename); // Path to your image' req.params.filename); // Replace with your image path
+    // console.log(imagePath, 'imagePath');
 
-exports.adminBoard = (req, res) => {
-  res.status(200).send("Admin Content.");
-};
+    const fs = require('fs');
+    if (!fs.existsSync(imagePath)) {
+      return res.status(404).send({ message: "File Not found." });
+    }
+    res.sendFile(imagePath);
 
-exports.supervisorBoard = (req, res) => {
-  res.status(200).send("Supervisor Content.");
+  } catch (error) {
+    return res.status(500).json({ message: "Sorry, something went wrong" });
+  }
 };

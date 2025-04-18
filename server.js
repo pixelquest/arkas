@@ -15,14 +15,14 @@ const allowedOrigins = ['http://localhost:4200', 'http://arkasfacilities.com', '
 app.use(
   cors({
     credentials: true,
-    origin: ["*"]
-    // origin: (origin, callback) => {
-    //   if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-    //     callback(null, true); // Allow the origin
-    //   } else {
-    //     callback(new Error('Not allowed by CORS')); // Reject the origin
-    //   }
-    // }
+    // origin: ["*"]
+    origin: (origin, callback) => {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true); // Allow the origin
+      } else {
+        callback(new Error('Not allowed by CORS')); // Reject the origin
+      }
+    }
   })
 );
 
@@ -72,6 +72,7 @@ require("./app/routes/user.routes")(app);
 require("./app/routes/role.routes")(app);
 require("./app/routes/location.routes")(app);
 require("./app/routes/password-reset.routes")(app);
+require("./app/routes/bank.routes")(app);
 
 // set port, listen for requests
 // const PORT = process.env.PORT || 8080;

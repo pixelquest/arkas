@@ -9,6 +9,7 @@ db.user = require("./user.model");
 db.role = require("./role.model");
 db.location = require("./location.model");
 db.token = require("./token.model");
+db.bank = require("./bank.model");
 
 db.ROLES = ["User", "Admin", "Supervisor"];
 

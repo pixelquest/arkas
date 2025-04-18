@@ -5,7 +5,7 @@ const controller = require("../controllers/user.controller");
 const fileUploader = require('../helpers/file.helper');
 
 const upload = fileUploader('./uploads/');
-const cpUpload = upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'panCard', maxCount: 1 }]);
+const cpUpload = upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'panCard', maxCount: 1 }, { name: 'employeePhoto', maxCount: 1 }]);
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -43,19 +43,6 @@ module.exports = function (app) {
 
   app.delete("/user/deleteUser/:id", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.deleteUser);
 
-  // app.get("/test/all", controller.allAccess);
+  app.get("/user/getImage/uploads/:filename", controller.getImage);
 
-  app.get("/test/user", [authJwt.verifyToken], controller.userBoard);
-
-  app.get(
-    "/test/mod",
-    [authJwt.verifyToken, authJwt.isSupervisor],
-    controller.supervisorBoard
-  );
-
-  app.get(
-    "/test/admin",
-    [authJwt.verifyToken, authJwt.isAdmin],
-    controller.adminBoard
-  );
 };

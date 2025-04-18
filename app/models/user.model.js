@@ -7,7 +7,10 @@ const User = mongoose.model(
     firstName: String,
     lastName: String,
     aadharCard: String,
+    employeePhoto: String,
     panCard: String,
+    aadharCardNumber: Number,
+    panCardNumber: String,
     reference: String,
     siteLocation: {
       type: mongoose.Schema.Types.ObjectId,

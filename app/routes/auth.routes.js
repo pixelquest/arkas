@@ -20,7 +20,7 @@ module.exports = function (app) {
     next();
   });
 
-  const cpUpload = upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'panCard', maxCount: 1 }]);
+  const cpUpload = upload.fields([{ name: 'aadharCard', maxCount: 1 }, { name: 'panCard', maxCount: 1 }, { name: 'employeePhoto', maxCount: 1 }]);
 
   app.post(
     "/auth/signup",
