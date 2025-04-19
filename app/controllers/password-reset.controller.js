@@ -1,12 +1,16 @@
 const db = require("../models");
 const sendEmail = require('../helpers/sendEmail.helper');
 
-
 const crypto = require("crypto");
 var bcrypt = require("bcryptjs");
 
+const fs = require('fs');
+const path = require('path');
+
+
 const User = db.user;
 const Token = db.token;
+
 
 exports.sendResetLink = async (req, res) => {
     try {
@@ -24,10 +28,21 @@ exports.sendResetLink = async (req, res) => {
 
         console.log("user id", user._id);
         console.log("token", token.token);
-        console.log('base url', process.env.BASE_URL)
+        // console.log('base url', process.env.BASE_URL)
 
-        const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
-        await sendEmail(user.email, "Password reset", link);
+
+        const templatePath = path.join(__dirname, '../templates/passwordResetTemplate.html');
+        const htmlTemplate = fs.readFileSync(templatePath, 'utf-8'); // Read file as a string
+
+        const resetLink = `${process.env.BASE_URL}/password-reset/${user._id}/${token.token}`;
+
+        const htmlContent = htmlTemplate
+            .replace('[User\'s Name]', user.firstName + " " + user.lastName)
+            .replace('[Password Reset Link]', resetLink)
+            .replaceAll('[Your App Name]', 'Arkas Facilities')
+            .replace('[X hours]', '1 hr');
+
+        await sendEmail(user.email, "ARKAS Facilities - Account password reset", htmlContent);
 
         res.send({ message: "Password reset link sent to your email account", status: true });
     } catch (err) {
