@@ -5,9 +5,7 @@ const Bank = db.bank;
 exports.saveUserBank = async (req, res) => {
 
     try {
-        console.log(req.body);
         let record = await Bank.findOne({ userId: req.body.userId });
-        console.log(record);
 
         if (record) {
             // Update the existing record

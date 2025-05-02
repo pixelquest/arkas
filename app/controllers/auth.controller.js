@@ -2,6 +2,11 @@ const config = require("../config/auth.config");
 
 const db = require("../models");
 const nodemailer = require('nodemailer');
+const sendEmail = require('../helpers/sendEmail.helper');
+
+
+const fs = require('fs');
+const path = require('path');
 
 const User = db.user;
 const Role = db.role;
@@ -36,6 +41,16 @@ exports.signup = async (req, res) => {
       let empId = 'ARKAS' + n;
       user.empId = empId;
       user.rowNumber = n;
+
+
+      const templatePath = path.join(__dirname, '../templates/userRegistrationTemplate.html');
+      const htmlTemplate = fs.readFileSync(templatePath, 'utf-8'); // Read file as a string
+
+      const htmlContent = htmlTemplate
+        .replace('[User\'s Name]', user.firstName + " " + user.lastName)
+        .replaceAll('[Your App Name]', 'Arkas Facilities');
+
+
 
       user.save((err, user) => {
         // console.log(req.body.roles);
@@ -78,6 +93,8 @@ exports.signup = async (req, res) => {
                   return;
                 }
 
+                sendEmail(user.email, "Welcome to ARKAS Facilities", htmlContent);
+
                 res.send({ message: "User was registered successfully!" });
               });
             }
@@ -95,6 +112,8 @@ exports.signup = async (req, res) => {
                 res.status(500).send({ message: err });
                 return;
               }
+
+              sendEmail(user.email, "Welcome to ARKAS Facilities", htmlContent);
 
               res.send({ message: "User was registered successfully!" });
             });
@@ -160,39 +179,22 @@ exports.signin = (req, res) => {
 exports.sendEmail = async (req, res) => {
   const { name, email, message, phone } = req.body; // Extract email details from request
 
-  // Create a Nodemailer transporter
-  const transporter = nodemailer.createTransport({
-    service: 'gmail', // Use Gmail for simplicity
-    auth: {
-      user: 'your-email@gmail.com', // Replace with your email
-      pass: 'your-email-password',  // Replace with your email password
-    },
-  });
+  const templatePath = path.join(__dirname, '../templates/feedBackTemplate.html');
+  const htmlTemplate = fs.readFileSync(templatePath, 'utf-8'); // Read file as a string
 
-  let htmlMessage = `<p>Hi  ${name?.toUpperCase()},</p><br>
-  <p>Thanks for contacting us. We will get back to you soon with your query.</p>
-  <hr><br><br>
-  <p>Details:</p>
-  <p>Name: ${name}</p>
-  <p>Email: ${email}</p>
-  <p>Phone: ${phone}</p>
-  <p>Message: ${message}</p>`;
-
-  // Email options
-  const mailOptions = {
-    from: 'your-email@gmail.com',
-    cc: email, // Sender email
-    to: "praveengandhe@gmail.com", // Recipient email
-    subject: "ARKAS - Contact/Feedback Form Request", // Email subject
-    html: htmlMessage // Email content
-  };
-
+  const htmlContent = htmlTemplate
+    .replace('[name]', name?.toUpperCase())
+    .replace('[email]', email)
+    .replaceAll('[phone]', phone)
+    .replace('[message]', message)
+    .replace('[Your App Name]', 'Arkas Facilities');
   try {
     // Send the email
-    const info = await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: 'Email sent successfully', info });
+    await sendEmail(`pradeep@arkasfacilities.com,${email}`, "ARKAS - Contact/Feedback Form Request", htmlContent);
+    res.send({ message: "Email sent successfully", status: true });
+
   } catch (error) {
-    res.status(500).json({ message: 'Failed to send email', error });
+    res.status(500).json({ message: 'Failed to send email', status: false });
   }
 };
 
