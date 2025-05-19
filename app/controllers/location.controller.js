@@ -94,7 +94,7 @@ exports.addLocation = (req, res) => {
             res.status(500).send({ message: err });
             return;
         }
-        res.send({ message: "Location was registered successfully!" });
+        res.send({ message: "Location was registered successfully!", status: true });
     });
 };
 
