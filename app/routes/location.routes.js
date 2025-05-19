@@ -13,9 +13,9 @@ module.exports = function (app) {
 
     app.get("/location/allLocations", [authJwt.verifyToken, authJwt.isAdminOrSupervisor, authJwt.authenticateToken], controller.allLocations);
 
-    app.post("/location/addLocation", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.addLocation);
+    app.post("/location/addLocation", [authJwt.verifyToken, authJwt.isAdminOrSupervisor, authJwt.authenticateToken], controller.addLocation);
 
-    app.put("/location/updateLocation/:id", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.updateLocation);
+    app.put("/location/updateLocation/:id", [authJwt.verifyToken, authJwt.isAdminOrSupervisor, authJwt.authenticateToken], controller.updateLocation);
 
     app.delete("/location/deleteLocation/:id", [authJwt.verifyToken, authJwt.isAdmin, authJwt.authenticateToken], controller.deleteLocation);
 
